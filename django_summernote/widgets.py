@@ -92,11 +92,12 @@ class SummernoteInplaceWidget(SummernoteWidgetBase):
                         config['css_for_inplace']
                 )
             },
-            js=(
-                    (config['codemirror_js'] if has_codemirror_config() else ()) +
-                    config['default_js'] +
-                    config['js_for_inplace']
-            ))
+            # js=(
+            #         (config['codemirror_js'] if has_codemirror_config() else ()) +
+            #         config['default_js'] +
+            #         config['js_for_inplace']
+            # )
+        )
 
     media = property(_media)
 
