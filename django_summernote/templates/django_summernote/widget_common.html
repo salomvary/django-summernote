@@ -1,4 +1,4 @@
-<script>
+<script{% if not iframe and "__prefix__" in id %} type="text/template"{% endif %}>
 function initSummernote_{{ id_safe }}() {
     {{ config.jquery }}(document).ready(function($) {
 {% if iframe %}

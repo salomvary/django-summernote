@@ -1,5 +1,5 @@
 {% include "django_summernote/widget_common.html" with iframe=False %}
-<script>
+<script{% if not iframe and "__prefix__" in id %} type="text/template"{% endif %}>
 {% if config.lazy %}
     if( __summernotes__ === undefined ) {
         var __summernotes__ = new Array();
@@ -13,4 +13,39 @@
 {% else %}
     initSummernote_{{ id_safe }}();
 {% endif %}
+
+// Fix initializing dynamically added in-place widgets
+{
+    const $ = django.jQuery;
+
+    // Adopted from autocomplete.js
+    const updateElementIndex = function(text, prefix, ndx) {
+        const id_regex = new RegExp("(" + prefix + "-(\\d+|__prefix__))");
+        const replacement = prefix + "-" + ndx;
+        return text.replace(id_regex, replacement);
+    };
+
+    // Prevent registering the hook multiple times
+    if (window.__summernote__formset__hook_registered === undefined) {
+        document.addEventListener('formset:added', (event) => {
+            const formsetName = event.detail.formsetName;
+
+            // Adopted from autocomplete.js
+            const totalForms = $("#id_" + formsetName + "-TOTAL_FORMS");
+            let currentIndex = parseInt(totalForms.val(), 10) - 1;
+
+            for (const script of $(event.target).find('script')) {
+                const scriptTemplate  = script.innerText;
+                // Make sure we only evaluate Summernote scripts
+                if (scriptTemplate.includes('initSummernote')) {
+                    // Replace __prefix__ with the actual index
+                    const initScript = updateElementIndex(scriptTemplate, formsetName, currentIndex);
+                    $.globalEval(initScript);
+                }
+            }
+        });
+
+        window.__summernote__formset__hook_registered = true;
+    }
+}
 </script>
