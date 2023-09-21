@@ -1,0 +1,8 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block extrahead %}
+  <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="{% static "summernote/summernote-lite.min.js" %}"></script>
+  <script>window.summernoteJQuery = jQuery.noConflict(true);</script>
+{% endblock %}

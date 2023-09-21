@@ -31,15 +31,16 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+# To allow overriding admin/base.html, djs_playground must come before django.contrib.admin
+    'djs_playground',
+    'django_summernote',
+] + [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-] + [
-    'django_summernote',
-    'djs_playground',
 ]
 
 MIDDLEWARE = [
@@ -121,9 +122,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'djs_playground/static/')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'djs_playground/media/')
 
-SUMMERNOTE_THEME = 'bs4'
+SUMMERNOTE_THEME = 'lite'
 SUMMERNOTE_CONFIG = {
-    'iframe': True,
+    'iframe': False,
+    'jquery': 'summernoteJQuery',
     'summernote': {
         'width': '800px',
         'height': '400px',
