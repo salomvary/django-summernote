@@ -128,7 +128,23 @@ function initSummernote_{{ id_safe }}() {
         };
 
         // include summernote language pack, synchronously
-        $.ajax({url: settings.url.language, dataType: "script", complete: initEditor})
+        {% if iframe %}
+            $.ajax({url: settings.url.language, dataType: "script", complete: initEditor})
+        {% else %}
+            // Loading language pack currently fails in inline mode because the language pack
+            // assumes window.jQuery to be available, which is not the case in our case.
+            // Disabling the language pack loading for now, until we figure out how to use
+            // the configured non-default jQuery for Summernote.
+
+            if (!settings.url.language.includes('en-US')) {
+                console.warn(
+                    'Looks like the Summernote widget is initialized with a non-en-US language pack'
+                    + 'but that is currently only supported in iframe-mode.'
+                );
+            }
+
+            initEditor();
+        {% endif %}
 
         // For CodeMirror
         $sn.on('summernote.codeview.toggled', function() {
